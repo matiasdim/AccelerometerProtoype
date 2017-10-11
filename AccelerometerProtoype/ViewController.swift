@@ -47,10 +47,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
-    //let arrayX: [Int] = [1,2,1]
-    //let arrayY: [Int] = [0,2,2,1]
     let arrayX: [Int] = [1,2,1]
     let arrayY: [Int] = [0,2,2,1]
+    
+    
 
     
     override func viewDidLoad() {
@@ -68,6 +68,7 @@ class ViewController: UIViewController {
     }
     
     func calc() -> Matrix{
+        var modifiedArrayY: [Int] = arrayY.reversed()
         var matrix = Matrix(rows: arrayY.count + 1, columns: arrayX.count + 1)
         
         for i in 0...arrayY.count {
@@ -82,7 +83,7 @@ class ViewController: UIViewController {
         for i in 1...arrayY.count{
             for j in 1...arrayX.count{
                 // cost abs diference of arrayY and arrayX
-                cost = Double(abs(arrayY[i-1] - arrayX[j-1]))
+                cost = Double(abs(modifiedArrayY[i-1] - arrayX[j-1]))
                 matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i,j-1], c: matrix[i-1,j-1])
             }
         }
