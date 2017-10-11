@@ -9,6 +9,29 @@
 import UIKit
 import CoreMotion
 
+struct Matrix {
+    let rows: Int, columns: Int
+    var grid: [Double]
+    init(rows: Int, columns: Int) {
+        self.rows = rows
+        self.columns = columns
+        grid = Array(repeating: 0.0, count: rows * columns)
+    }
+    func indexIsValid(row: Int, column: Int) -> Bool {
+        return row >= 0 && row < rows && column >= 0 && column < columns
+    }
+    subscript(row: Int, column: Int) -> Double {
+        get {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            return grid[(row * columns) + column]
+        }
+        set {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
+        }
+    }
+}
+
 class ViewController: UIViewController {
     
     var count:Int = 0
@@ -22,6 +45,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
+    let arrayX: [Int] = [1,6,2,3,0,9,4,3,6,3]
+    let arrayY: [Int] = [1,3,4,9,8,2,1,5,7,3]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.motionManager = CMMotionManager()
@@ -30,7 +56,48 @@ class ViewController: UIViewController {
         self.slider.maximumValue = 100
         self.slider.minimumValue = 0
         self.slider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
+        
+        var matrix = calc()
 
+
+    }
+    
+    func calc() -> Matrix{
+        var matrix = Matrix(rows: arrayY.count, columns: arrayX.count)
+        
+        for i in 1...arrayY.count {
+            matrix[i,0] = Double.infinity
+        }
+        for j in 1...arrayX.count {
+            matrix[0,j] = Double.infinity
+        }
+        matrix[0,0] = 0
+        
+        var cost:Double = 0
+        for i in 1...arrayY.count{
+            for j in 1...arrayX.count{
+                // Cost is abs value of x - y ---> |x-y|
+                cost = Double(abs(arrayY[i] - arrayX[j]))
+                matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i,j-1], c: matrix[i-1,j-1])
+            }
+        }
+        return matrix
+    }
+    
+    func getMinimum(a:Double, b:Double, c:Double) -> Double{
+        if (a > b){
+            if (a > c){
+                return a;
+            }else{
+                return c;
+            }
+        }else{
+            if (b > c){
+                return b
+            }else{
+                return c;
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {
