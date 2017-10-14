@@ -45,8 +45,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
-    let arrayX: [Int] = [1,6,2,3,0,9,4,3,6,3]
-    let arrayY: [Int] = [1,3,4,9,8,2,1,5,7,3]
+    let arrayY: [Int] = [1,2,5,4,3,7]
+    let arrayX: [Int] = [2,3,2,1,3,4]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,36 +63,41 @@ class ViewController: UIViewController {
     }
     
     func calc() -> Matrix{
-        var matrix = Matrix(rows: arrayY.count, columns: arrayX.count)
+        var matrix = Matrix(rows: arrayY.count+1, columns: arrayX.count+1)
         
-        for i in 1...arrayY.count {
+        for i in (0...arrayY.count-1).reversed() {
             matrix[i,0] = Double.infinity
         }
-        for j in 1...arrayX.count {
-            matrix[0,j] = Double.infinity
+        for j in (1...arrayX.count).reversed() {
+            matrix[arrayY.count,j] = Double.infinity
         }
-        matrix[0,0] = 0
+        matrix[0,arrayX.count] = 0
         
         var cost:Double = 0
-        for i in 1...arrayY.count{
+        var countY = 0
+        var countX = 0
+        for i in (0..<arrayY.count).reversed(){
             for j in 1...arrayX.count{
                 // Cost is abs value of x - y ---> |x-y|
-                cost = Double(abs(arrayY[i] - arrayX[j]))
-                matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i,j-1], c: matrix[i-1,j-1])
+                cost = pow(Double(arrayY[countY] - arrayX[countX]),2)
+                matrix[i,j] = cost + getMinimum(a: matrix[i+1,j], b: matrix[i+1,j-1], c: matrix[i,j-1])
+                countX += 1
             }
+            countX = 0
+            countY += 1
         }
         return matrix
     }
     
     func getMinimum(a:Double, b:Double, c:Double) -> Double{
-        if (a > b){
-            if (a > c){
+        if (a < b){
+            if (a < c){
                 return a;
             }else{
                 return c;
             }
         }else{
-            if (b > c){
+            if (b < c){
                 return b
             }else{
                 return c;
