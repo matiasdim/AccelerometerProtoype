@@ -6,6 +6,8 @@
 //  Copyright © 2017 Matias. All rights reserved.
 //
 
+// http://www.cs.unm.edu/~mueen/DTW.pdf
+
 import UIKit
 import CoreMotion
 
