@@ -64,9 +64,11 @@ class ViewController: UIViewController {
 
     }
     
+    
     func calc() -> Matrix{
         var matrix = Matrix(rows: arrayY.count+1, columns: arrayX.count+1)
         
+        /*
         for i in (0...arrayY.count-1).reversed() {
             matrix[i,0] = Double.infinity
         }
@@ -88,6 +90,51 @@ class ViewController: UIViewController {
             countX = 0
             countY += 1
         }
+ */
+        for i in 1...arrayY.count {
+            matrix[i,0] = Double.infinity
+        }
+        for j in 1...arrayX.count {
+            matrix[0,j] = Double.infinity
+        }
+        matrix[0,0] = 0
+        
+        var cost:Double = 0
+        var countY = 0
+        var countX = 0
+        for i in 1...arrayY.count{
+            for j in 1...arrayX.count{
+                // Cost is abs value of x - y ---> |x-y|
+                cost = pow(Double(arrayY[countY] - arrayX[countX]),2)
+                matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i-1,j-1], c: matrix[i,j-1])
+                countX += 1
+            }
+            countX = 0
+            countY += 1
+        }
+        
+        // backtracking
+        var path: [(Int, Int)] = [(arrayY.count, arrayX.count)]
+        var i = arrayY.count
+        var j = arrayX.count
+        while i > 1 && j > 1 {
+            if i == 1{
+                j -= 1
+            }else if j == 1{
+                i -= 1
+            }else{
+                if matrix[i-1,j] == getMinimum(a: matrix[i-1,j], b: matrix[i-1,j-1], c: matrix[i,j-1]){
+                    i -= 1
+                }else if matrix[i,j-1] == getMinimum(a: matrix[i-1,j], b: matrix[i-1,j-1], c: matrix[i,j-1]){
+                    j -= 1
+                }else{
+                    i -= 1
+                    j -= 1
+                }
+            }
+            path.append((i,j))
+        }
+  
         return matrix
     }
     
