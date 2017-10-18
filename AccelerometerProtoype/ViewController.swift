@@ -14,6 +14,7 @@ import CoreMotion
 struct Matrix {
     let rows: Int, columns: Int
     var grid: [Double]
+    
     init(rows: Int, columns: Int) {
         self.rows = rows
         self.columns = columns
@@ -47,8 +48,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
-    let arrayY: [Int] = [1,2,5,4,3,7]
-    let arrayX: [Int] = [2,3,2,1,3,4]
+    let datasetX: [Int] = [1,2,5,4,3,7]
+    let dataX: [Int] = [2,3,2,1,3,4]
+    let r = 0 // restriction for Sakoe-chiba band
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,14 +61,18 @@ class ViewController: UIViewController {
         self.slider.minimumValue = 0
         self.slider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         
-        var matrix = calc()
+        // dataX is the data to be evaluated
+        // datasetX is the data know as correct. Our sample data
+        _ = calc(dataX: dataX, datasetX: datasetX)
+        
 
 
     }
     
     
-    func calc() -> Matrix{
-        var matrix = Matrix(rows: arrayY.count+1, columns: arrayX.count+1)
+    func calc(dataX:[Int], datasetX:[Int]) -> Matrix{
+        let numberOfClomuns = 1+r+1+r+1
+        var matrix = Matrix(rows: datasetX.count+1, columns: dataX.count+1)
         
         /*
         for i in (0...arrayY.count-1).reversed() {
@@ -91,32 +97,48 @@ class ViewController: UIViewController {
             countY += 1
         }
  */
-        for i in 1...arrayY.count {
-            matrix[i,0] = Double.infinity
+        
+        for i in 0...datasetX.count {
+            for j in 0...dataX.count {
+                matrix[i,j] = Double.infinity
+            }
         }
-        for j in 1...arrayX.count {
+        /*
+        for j in 1..<numberOfClomuns {
             matrix[0,j] = Double.infinity
-        }
+        }*/
         matrix[0,0] = 0
         
         var cost:Double = 0
         var countY = 0
         var countX = 0
-        for i in 1...arrayY.count{
-            for j in 1...arrayX.count{
+        
+        var columnUpdater = 1
+        for i in 1...datasetX.count{
+            for j in columnUpdater...columnUpdater+numberOfClomuns-1{
+                if(i == datasetX.count && j == columnUpdater+numberOfClomuns-1){
+                    break
+                }
                 // Cost is abs value of x - y ---> |x-y|
-                cost = pow(Double(arrayY[countY] - arrayX[countX]),2)
+                cost = pow(Double(datasetX[i-1] - dataX[j-1]),2)
                 matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i-1,j-1], c: matrix[i,j-1])
                 countX += 1
+                if (i == 1 && j == numberOfClomuns - 1){
+                    break
+                }
+            }
+            if (i > 1){
+                columnUpdater += 1
             }
             countX = 0
             countY += 1
         }
         
+        
         // backtracking
-        var path: [(Int, Int)] = [(arrayY.count, arrayX.count)]
-        var i = arrayY.count
-        var j = arrayX.count
+        var path: [(Int, Int)] = [(datasetX.count, dataX.count)]
+        var i = datasetX.count
+        var j = dataX.count
         while i > 1 && j > 1 {
             if i == 1{
                 j -= 1
