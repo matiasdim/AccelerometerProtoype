@@ -39,18 +39,26 @@ class ViewController: UIViewController {
     
     var count:Int = 0
     var differenceInterval: Double = 2.0
+    /*
     var xComparingData:[Double] = [0.0116119384765625, 0.0102386474609375, 0.0152130126953125, 0.0111541748046875, 0.0108184814453125, 0.010772705078125, 0.0102996826171875, 0.0105743408203125, 0.01104736328125, 0.011199951171875, 0.0115509033203125, 0.0103912353515625, 0.0107269287109375, 0.0108795166015625, 0.010894775390625, 0.0111083984375, 0.0108642578125, 0.010223388671875, 0.0104522705078125, 0.010467529296875, 0.0108642578125, 0.0106201171875, 0.0107879638671875, 0.0103607177734375, 0.0110931396484375, 0.0110015869140625, 0.010833740234375, 0.0104217529296875, 0.01043701171875]
     var yComparingData:[Double] = [0.01861572265625, 0.01922607421875, 0.020904541015625, 0.018585205078125, 0.0198974609375, 0.01947021484375, 0.0192413330078125, 0.018951416015625, 0.019012451171875, 0.0182342529296875, 0.0186767578125, 0.0197296142578125, 0.0199127197265625, 0.0195465087890625, 0.0198974609375, 0.0184478759765625, 0.0200653076171875, 0.0188446044921875, 0.0198211669921875, 0.0194854736328125, 0.018585205078125, 0.01934814453125, 0.0185089111328125, 0.01873779296875, 0.0194549560546875, 0.019256591796875, 0.018463134765625, 0.018951416015625, 0.0182647705078125]
     var zComparingData:[Double] = [-0.988616943359375, -0.988815307617188, -1.00791931152344, -0.988723754882812, -0.98822021484375, -0.988555908203125, -0.98895263671875, -0.9874267578125, -0.98846435546875, -0.987960815429688, -0.987945556640625, -0.988021850585938, -0.988449096679688, -0.988677978515625, -0.989181518554688, -0.988388061523438, -0.98834228515625, -0.987884521484375, -0.988418579101562, -0.989044189453125, -0.988082885742188, -0.987625122070312, -0.987655639648438, -0.987640380859375, -0.988494873046875, -0.991912841796875, -0.993118286132812, -0.988082885742188, -0.985519409179688]
+     */
     
     var motionManager: CMMotionManager!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderLabel: UILabel!
     
-    let datasetX: [Int] = [1,2,5,4,3,7]
-    let dataX: [Int] = [2,3,2,1,3,4]
+    
     let r = 0 // restriction for Sakoe-chiba band
+    let datasetX: [Int] = [1,2,2,2,3,4,5,6,7]
+    let dataX: [Int] = [1,2,3,4,5,6,6,6,7]
+    let datasetY: [Int] = [1,2,2,2,3,4,5,6,7]
+    let dataY: [Int] = [1,2,3,4,5,6,6,6,7]
+    let datasetZ: [Int] = [1,2,2,2,3,4,5,6,7]
+    let dataZ: [Int] = [1,2,2,2,3,4,5,6,7]
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,12 +69,47 @@ class ViewController: UIViewController {
         self.slider.minimumValue = 0
         self.slider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         
+        
+        
         // dataX is the data to be evaluated
         // datasetX is the data know as correct. Our sample data
-        _ = calc(dataX: dataX, datasetX: datasetX)
+        let queueAxisX = DispatchQueue(label: "com.matiasdim.axisX") // Que to handle the calculation
+        queueAxisX.async {
+            let matrix = self.calc(dataX: self.dataX, datasetX: self.datasetX)
+            DispatchQueue.main.async {
+                self.axisXCompletion(mtx: matrix)
+            }
+        }
+        // dataY is the data to be evaluated
+        // datasetY is the data know as correct. Our sample data
+        let queueAxisY = DispatchQueue(label: "com.matiasdim.axisY") // Que to handle the calculation
+        queueAxisY.async {
+            let matrix = self.calc(dataX: self.dataY, datasetX: self.datasetY)
+            DispatchQueue.main.async {
+                self.axisYCompletion(mtx: matrix)
+            }
+        }
+        // dataZ is the data to be evaluated
+        // datasetZ is the data know as correct. Our sample data
+        let queueAxisZ = DispatchQueue(label: "com.matiasdim.axisZ") // Que to handle the calculation
+        queueAxisZ.async {
+            let matrix = self.calc(dataX: self.dataZ, datasetX: self.datasetZ)
+            DispatchQueue.main.async {
+                self.axisZCompletion(mtx: matrix)
+            }
+        }
         
-
-
+        
+    }
+    
+    func axisXCompletion(mtx: Matrix) -> Void{
+        print("result of matrix DTW analysis FOR X is: \(mtx[datasetX.count, dataX.count])")
+    }
+    func axisYCompletion(mtx: Matrix) -> Void{
+        print("result of matrix DTW analysis FOR Y is: \(mtx[datasetY.count, dataY.count])")
+    }
+    func axisZCompletion(mtx: Matrix) -> Void{
+        print("result of matrix DTW analysis FOR Z is: \(mtx[datasetZ.count, dataZ.count])")
     }
     
     
@@ -120,7 +163,7 @@ class ViewController: UIViewController {
                     break
                 }
                 // Cost is abs value of x - y ---> |x-y|
-                cost = pow(Double(datasetX[i-1] - dataX[j-1]),2)
+                cost = abs(Double(datasetX[i-1] - dataX[j-1]))
                 matrix[i,j] = cost + getMinimum(a: matrix[i-1,j], b: matrix[i-1,j-1], c: matrix[i,j-1])
                 countX += 1
                 if (i == 1 && j == numberOfClomuns - 1){
@@ -136,6 +179,7 @@ class ViewController: UIViewController {
         
         
         // backtracking
+        /*
         var path: [(Int, Int)] = [(datasetX.count, dataX.count)]
         var i = datasetX.count
         var j = dataX.count
@@ -156,7 +200,8 @@ class ViewController: UIViewController {
             }
             path.append((i,j))
         }
-  
+         */
+        
         return matrix
     }
     
@@ -186,6 +231,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func startPressed(_ sender: Any) {
+        /*
         count = 0
         //let updateInterval = 0.01 + 0.005 * self.slider.value;
         self.motionManager.accelerometerUpdateInterval = 1/1 //TimeInterval(1/self.slider.value) //1.0 / 60.0  // 60 Hz
@@ -214,6 +260,7 @@ class ViewController: UIViewController {
             let alert = UIAlertController(title: "Alert!", message: "No accelerometerAvailable", preferredStyle: .alert)
             alert.show(self, sender: self)
         }
+ */
     }
     @IBAction func stopPressed(_ sender: Any) {
         if self.motionManager.isAccelerometerActive{
@@ -226,6 +273,7 @@ class ViewController: UIViewController {
         self.sliderLabel.text = "\(self.slider.value)"
     }
     
+    /*
     func compare(x:Double, y:Double, z:Double) -> Bool
     {
         if xComparingData.indices.contains(count) && yComparingData.indices.contains(count) && zComparingData.indices.contains(count){
@@ -244,5 +292,6 @@ class ViewController: UIViewController {
         print("Wrong move!")
         return false
     }
+ */
 }
 
