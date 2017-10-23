@@ -81,6 +81,8 @@ class ViewController: UIViewController {
     }
     
     func startGettingData(){
+        var (ampForEval, amplitudeResult): (Bool, Bool) = (false, false)
+        var (freqForEval, frequResult): (Bool, Bool) = (false, false)
         //let updateInterval = 0.01 + 0.005 * self.slider.value;
         self.motionManager.accelerometerUpdateInterval = TimeInterval(Constants.accInterval)
         if self.motionManager.isAccelerometerAvailable {
@@ -89,12 +91,49 @@ class ViewController: UIViewController {
                     print("No data available")
                     return
                 }
-                
-                let y = data.acceleration.y
-                // Validations!
-                self?.compare(value: y)
-                self?.calcFrequency(value: y)
-                
+                DispatchQueue.main.async {
+                    let y = data.acceleration.y
+                    // Validations!
+                    (ampForEval, amplitudeResult) = (self?.compare(value: y))!
+                    (freqForEval, frequResult) = (self?.calcFrequency(value: y))!
+                    if ampForEval && !freqForEval{
+                        if (amplitudeResult){ // If amplitudeResult is true play GOOD sound
+                            if (self?.wrongSoundLastPlayed)!{
+                                self?.goodSound.play()
+                                self?.wrongSoundLastPlayed = false
+                            }
+                        }else{ // If amplitudeResult is false play WRONG sound
+                            if (!(self?.wrongSoundLastPlayed)!){
+                                self?.wrongSound.play()
+                                self?.wrongSoundLastPlayed = true
+                            }
+                        }
+                    }else if (!ampForEval && freqForEval){
+                        if (frequResult){ // If frequResult is true play GOOD sound
+                            if (self?.wrongSoundLastPlayed)!{
+                                self?.goodSound.play()
+                                self?.wrongSoundLastPlayed = false
+                            }
+                        }else{ // If frequResult is false play WRONG sound
+                            if (!(self?.wrongSoundLastPlayed)!){
+                                self?.wrongSound.play()
+                                self?.wrongSoundLastPlayed = true
+                            }
+                        }
+                    }else if (ampForEval && freqForEval){ // both conditions must have true too play GOOD sound
+                        if (amplitudeResult && frequResult){
+                            if (self?.wrongSoundLastPlayed)!{
+                                self?.goodSound.play()
+                                self?.wrongSoundLastPlayed = false
+                            }
+                        }else{
+                            if (!(self?.wrongSoundLastPlayed)!){
+                                self?.wrongSound.play()
+                                self?.wrongSoundLastPlayed = true
+                            }
+                        }
+                    }
+                }
             })
         }else {
             let alert = UIAlertController(title: "Alert!", message: "No accelerometerAvailable", preferredStyle: .alert)
@@ -127,7 +166,7 @@ class ViewController: UIViewController {
         self.sliderLabel.text = "\(self.slider.value)"
     }
     
-    func compare(value y:Double) -> Void
+    func compare(value y:Double) -> (Bool, Bool)
     {
         //print(y)
         // General Evaluation is done every 3 seconds
@@ -157,19 +196,16 @@ class ViewController: UIViewController {
         // This section validates if the sound that is intended to be played in this point was played the last time a sound was played.
         // if so, then it avoid playing the sound
         if (self.amplitudeScore == 0){
-            if (!self.wrongSoundLastPlayed){
-                self.playWrongSound()
-                print("Bad amplitude in Y!!!!!!!!")
-            }
+            print("Bad amplitude in Y!!!!!!!!")
+            return (true, false)
         }else if (self.amplitudeScore == 10){
-            if (self.wrongSoundLastPlayed){
-                self.playGoodSound()
-                print("Good amplitude in Y!!!!!!")
-            }
+            print("Good amplitude in Y!!!!!!")
+            return (true, true)
         }
+        return (false, false)
     }
     
-    func calcFrequency(value: Double){
+    func calcFrequency(value: Double) -> (Bool, Bool){
         self.frequencyCounter += 1
         
         // Getting notion of the zero-crossing movement to determine the period for the frequency
@@ -213,29 +249,24 @@ class ViewController: UIViewController {
             // This section validates if the sound that is intended to be played in this point was played the last time a sound was played.
             // if so, then it avoid playing the sound
             if (self.freqScore == 0){
-                if (!self.wrongSoundLastPlayed){
-                    print("Bad frequency!!!!!!")
-                    self.playWrongSound()
-                }
+                print("Bad frequency!!!!!!")
+                return (true, false)
             }else if (self.freqScore == 10){
-                if (self.wrongSoundLastPlayed){
-                    print("Good frequency!!!!!")
-                    self.playGoodSound()
-                }
+                print("Good frequency!!!!!")
+                return (true, true)
             }
             self.frequencyCounter = 0
             self.crossingZero = 0
         }else if(self.frequencyCounter > 300){ // Not completing a period on 300 reads (3s) so not moving well at all...
             self.freqScore = 0
             print("Not completing a period in the last 100 reads!!!!!!")
-            let frequency: Double  = 1.0/Double(self.frequencyCounter)
+            //let frequency: Double  = 1.0/Double(self.frequencyCounter)
             //print("Not crossing 0. Frequency: \(frequency)")
-            if (!self.wrongSoundLastPlayed){
-                self.playWrongSound()
-            }
             self.frequencyCounter = 0
             self.crossingZero = 0
+            return (true, false)
         }
+        return (false, false)
     }
     
     func playWrongSound(){
