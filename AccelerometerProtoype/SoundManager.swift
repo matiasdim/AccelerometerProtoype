@@ -11,14 +11,13 @@ import AVFoundation
 
 class SoundManager: NSObject {
     
-    static func setupSound(wrongSound: Bool!) -> AVAudioPlayer{
+    static func setupSound(soundName: String) -> AVAudioPlayer{
         var sound: AVAudioPlayer!
-        let fileName = wrongSound ? "wrong" : "good"
-        let path = Bundle.main.path(forResource: "finished", ofType:"mp3")!
+        let path = Bundle.main.path(forResource: soundName, ofType:"mp3")!
         let url = URL(fileURLWithPath: path)
         do {
             sound = try AVAudioPlayer(contentsOf: url)
-            sound.numberOfLoops = 1
+            sound.numberOfLoops = 0
             sound.prepareToPlay()
         } catch {
             print("error loading file")
