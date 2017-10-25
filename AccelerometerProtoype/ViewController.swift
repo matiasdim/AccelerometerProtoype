@@ -13,15 +13,25 @@ import AVFoundation
 struct Constants {
     // Range of Amplitude T
     // G force over Y that will tell us how hard the movement is done
-    static let tMax: Double = 3.5
-    static let tMin: Double = -3.5
+    static let positiveTMax: Double = 90
+    static let positiveTMin: Double = 7.5
+    static let negativeTMin: Double = -9
+    static let negativeTMax: Double = -7.5
     // Range for frequency
     // Frequency taken from dataset follows an order of : 1 cycle/ number of measures
     // number of measures to complete a cycle for the dataset, Approx = 22.5
     // Frequency = 1/ 22.5 = 0.4
     static let fMax: Double = 0.06
-    static let fMin: Double = 0.03
+    static let fMin: Double = 0.02
     static let accInterval = 1/100 // 100 Hz
+    //sound Names
+    static let finishedFileName = "finished"
+    static let goodJobFileName = "goodJob"
+    static let okFileName = "ok"
+    static let shakeFasterFileName = "shakeFaster"
+    static let shakeHarderFileName = "shakeHarder"
+    static let thatsItFileName = "thatsIt"
+    static let youCanDoBetterFileName = "youCanDoBetter"
 }
 
 class ViewController: UIViewController {
@@ -52,10 +62,29 @@ class ViewController: UIViewController {
     
     // To count 3s before beginning analyzing accelerometer data at the beginning
     var seconds = 0
+    // Initial 3 seconds delay timer
     var timer = Timer()
     
-    var wrongSound: AVAudioPlayer!
-    var goodSound: AVAudioPlayer!
+    
+    // Global variables
+    var globalScore = 0
+    var globalMagnitude: (maxVal: Double, minVal: Double) = (0.0, 0.0)
+    var globalFrequency: Double = 0
+    // Validator timer
+    // Every second checks global values (globalMagnitude, globalFrequency) in order to update global score
+    // It is invalidated when the globalScores is 60
+    var globalTimer = Timer()
+    // To save the points of a particular period
+    var periodPoints: [Double] = []
+    
+    //SOunds instantiations
+    var finishedAudio: AVAudioPlayer!
+    var goodJobAudio: AVAudioPlayer!
+    var okAudio: AVAudioPlayer!
+    var shakeFasterAudio: AVAudioPlayer!
+    var shakeHarderAudio: AVAudioPlayer!
+    var thatsItAudio: AVAudioPlayer!
+    var youCanDoBetterAudio: AVAudioPlayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,8 +95,8 @@ class ViewController: UIViewController {
         self.slider.minimumValue = 0
         self.slider.addTarget(self, action: #selector(sliderValueChanged), for: .valueChanged)
         
-        wrongSound = SoundManager.setupSound(wrongSound: true)
-        goodSound = SoundManager.setupSound(wrongSound: false)
+        //Audios inits
+        initAudios()
 
     }
     
@@ -79,11 +108,21 @@ class ViewController: UIViewController {
     @IBAction func clearTextView(_ sender: Any) {
         self.textView.text = ""
     }
-    
+    func initAudios(){
+        finishedAudio = SoundManager.setupSound(wrongSound: true)//
+        goodJobAudio = SoundManager.setupSound(wrongSound: true)//Constants.goodJobFileName)
+        okAudio = SoundManager.setupSound(wrongSound: true)//Constants.okFileName)
+        shakeFasterAudio = SoundManager.setupSound(wrongSound: true)//Constants.shakeFasterFileName)
+        shakeHarderAudio = SoundManager.setupSound(wrongSound: true)//Constants.shakeHarderFileName)
+        thatsItAudio = SoundManager.setupSound(wrongSound: true)//Constants.thatsItFileName)
+        youCanDoBetterAudio = SoundManager.setupSound(wrongSound: true)//Constants.youCanDoBetterFileName)
+    }
     func startGettingData(){
         //let updateInterval = 0.01 + 0.005 * self.slider.value;
         self.motionManager.accelerometerUpdateInterval = TimeInterval(Constants.accInterval)
         if self.motionManager.isAccelerometerAvailable {
+            globalTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.thickHandler), userInfo: nil, repeats: true)
+            print("Starting getting data...")
             self.motionManager.startAccelerometerUpdates(to: .main, withHandler: { [weak self] (accelerometerData, error) in
                 guard let data = accelerometerData else{
                     print("No data available")
@@ -91,14 +130,36 @@ class ViewController: UIViewController {
                 }
                 
                 let y = data.acceleration.y
+                
                 // Validations!
-                self?.compare(value: y)
+                //self?.compare(value: y)
                 self?.calcFrequency(value: y)
                 
             })
         }else {
             let alert = UIAlertController(title: "Alert!", message: "No accelerometerAvailable", preferredStyle: .alert)
             alert.show(self, sender: self)
+        }
+    }
+    
+    //Checks every second global values to update global score if needed
+    @objc func thickHandler() {
+        if (globalFrequency <= Constants.fMax && globalFrequency >= Constants.fMin &&
+            globalMagnitude.maxVal <= Constants.positiveTMax && globalMagnitude.maxVal >= Constants.positiveTMin &&
+            globalMagnitude.minVal <= Constants.negativeTMax && globalMagnitude.minVal >= Constants.negativeTMin)
+        {
+                globalScore += 1
+            print("Global score updated -> \(globalScore)")
+        }else{
+            print("Values are not good")
+        }
+        if(globalScore == 5)
+        {
+            print("Finished!!")
+            finishedAudio.play()
+            globalTimer.invalidate()
+            self.motionManager.stopAccelerometerUpdates()
+            // ADD HERE ACTION FOR WHEN MOVEMENT IS COMPLETED!!!!
         }
     }
     
@@ -126,14 +187,14 @@ class ViewController: UIViewController {
         self.slider.value = self.slider.value
         self.sliderLabel.text = "\(self.slider.value)"
     }
-    
+    /*
     func compare(value y:Double) -> Void
     {
-        //print(y)
+        print(y)
         // General Evaluation is done every 3 seconds
         // Because we run in 1/100 Hz, we are receiving in 300 seconds, 300 reads so when counter is 300, it means tht 3 seconds passed.
 
-        //print ("Score is \(self.amplitudeScore)")
+        print ("Score is \(self.amplitudeScore)")
         if (y >= Constants.tMin && y <= Constants.tMax){ // in range
             self.amplitudeAwardCounter += 1
             if (self.amplitudeAwardCounter > 100){
@@ -168,9 +229,11 @@ class ViewController: UIViewController {
             }
         }
     }
+     */
     
     func calcFrequency(value: Double){
         self.frequencyCounter += 1
+        periodPoints.append(value)
         
         // Getting notion of the zero-crossing movement to determine the period for the frequency
         if self.frequencyCounter == 1{
@@ -187,7 +250,15 @@ class ViewController: UIViewController {
         
         // if crossingZero is 2 it means that a perio was completed
         if self.crossingZero == 2{
-            //print("SCORE \(self.freqScore)")
+            globalFrequency = 1.0/Double(self.frequencyCounter)
+            globalMagnitude.maxVal = periodPoints.max()!
+            globalMagnitude.minVal = periodPoints.min()!
+            periodPoints.removeAll()
+            print("COmpleted Period. GLobal variables updated.")
+            self.frequencyCounter = 0
+            self.crossingZero = 0
+            /*
+            print("SCORE \(self.freqScore)")
             let frequency: Double  = 1.0/Double(self.frequencyCounter)
             if (frequency <= Constants.fMax && frequency >= Constants.fMin){ // in of range
                 //print("Frequency in bounds: \(frequency)")
@@ -200,7 +271,7 @@ class ViewController: UIViewController {
                     self.freqPenaltyCounter = 0
                 }
             }else{ // out of range
-                //print("Frequency out bounds: \(frequency)")
+                print("Frequency out bounds: \(frequency)")
                 self.freqPenaltyCounter += 1
                 if (self.freqPenaltyCounter > 5){
                     if (self.freqScore != 0){
@@ -210,6 +281,9 @@ class ViewController: UIViewController {
                     self.freqAwardCounter = 0
                 }
             }
+             */
+            
+            /*
             // This section validates if the sound that is intended to be played in this point was played the last time a sound was played.
             // if so, then it avoid playing the sound
             if (self.freqScore == 0){
@@ -225,26 +299,21 @@ class ViewController: UIViewController {
             }
             self.frequencyCounter = 0
             self.crossingZero = 0
+             */
         }else if(self.frequencyCounter > 300){ // Not completing a period on 300 reads (3s) so not moving well at all...
+            self.frequencyCounter = 0
+            print("Not completing a period in the last 300 reads!!!!!!")
+            /*
             self.freqScore = 0
-            print("Not completing a period in the last 100 reads!!!!!!")
             let frequency: Double  = 1.0/Double(self.frequencyCounter)
-            //print("Not crossing 0. Frequency: \(frequency)")
+            print("Not crossing 0. Frequency: \(frequency)")
             if (!self.wrongSoundLastPlayed){
                 self.playWrongSound()
             }
             self.frequencyCounter = 0
             self.crossingZero = 0
+             */
         }
-    }
-    
-    func playWrongSound(){
-        wrongSound.play()
-        self.wrongSoundLastPlayed = true
-    }
-    func playGoodSound(){
-        goodSound.play()
-        self.wrongSoundLastPlayed = false
     }
 }
 

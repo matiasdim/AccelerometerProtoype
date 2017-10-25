@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC16CBE11FA0D603002E6070 /* shakeHarder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDA1FA0D602002E6070 /* shakeHarder.mp3 */; };
+		EC16CBE21FA0D603002E6070 /* goodJob.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDB1FA0D602002E6070 /* goodJob.mp3 */; };
+		EC16CBE31FA0D603002E6070 /* thatsIt.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDC1FA0D602002E6070 /* thatsIt.mp3 */; };
+		EC16CBE41FA0D603002E6070 /* finished.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDD1FA0D603002E6070 /* finished.mp3 */; };
+		EC16CBE51FA0D603002E6070 /* ok.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDE1FA0D603002E6070 /* ok.mp3 */; };
+		EC16CBE61FA0D603002E6070 /* youCanDoBetter.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDF1FA0D603002E6070 /* youCanDoBetter.mp3 */; };
+		EC16CBE71FA0D603002E6070 /* shakeFaster.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBE01FA0D603002E6070 /* shakeFaster.mp3 */; };
 		EC2320631F9D01B200196B43 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2320621F9D01B200196B43 /* SoundManager.swift */; };
-		EC2320651F9D04BA00196B43 /* wrong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC2320641F9D04BA00196B43 /* wrong.mp3 */; };
-		EC2320671F9D05BB00196B43 /* good.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC2320661F9D05BB00196B43 /* good.mp3 */; };
 		EC54C34C1F6B495100C74C54 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC54C34B1F6B495100C74C54 /* AppDelegate.swift */; };
 		EC54C34E1F6B495100C74C54 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC54C34D1F6B495100C74C54 /* ViewController.swift */; };
 		EC54C3511F6B495100C74C54 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC54C34F1F6B495100C74C54 /* Main.storyboard */; };
@@ -18,9 +23,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EC16CBDA1FA0D602002E6070 /* shakeHarder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = shakeHarder.mp3; path = AccelerometerProtoype/shakeHarder.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBDB1FA0D602002E6070 /* goodJob.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = goodJob.mp3; path = AccelerometerProtoype/goodJob.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBDC1FA0D602002E6070 /* thatsIt.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = thatsIt.mp3; path = AccelerometerProtoype/thatsIt.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBDD1FA0D603002E6070 /* finished.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = finished.mp3; path = AccelerometerProtoype/finished.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBDE1FA0D603002E6070 /* ok.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ok.mp3; path = AccelerometerProtoype/ok.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBDF1FA0D603002E6070 /* youCanDoBetter.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = youCanDoBetter.mp3; path = AccelerometerProtoype/youCanDoBetter.mp3; sourceTree = SOURCE_ROOT; };
+		EC16CBE01FA0D603002E6070 /* shakeFaster.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = shakeFaster.mp3; path = AccelerometerProtoype/shakeFaster.mp3; sourceTree = SOURCE_ROOT; };
 		EC2320621F9D01B200196B43 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
-		EC2320641F9D04BA00196B43 /* wrong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = wrong.mp3; sourceTree = "<group>"; };
-		EC2320661F9D05BB00196B43 /* good.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = good.mp3; sourceTree = "<group>"; };
 		EC54C3481F6B495100C74C54 /* AccelerometerProtoype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccelerometerProtoype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC54C34B1F6B495100C74C54 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EC54C34D1F6B495100C74C54 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -41,6 +51,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EC16CBB71FA03C66002E6070 /* SoundFiles */ = {
+			isa = PBXGroup;
+			children = (
+				EC16CBDD1FA0D603002E6070 /* finished.mp3 */,
+				EC16CBDB1FA0D602002E6070 /* goodJob.mp3 */,
+				EC16CBDE1FA0D603002E6070 /* ok.mp3 */,
+				EC16CBE01FA0D603002E6070 /* shakeFaster.mp3 */,
+				EC16CBDA1FA0D602002E6070 /* shakeHarder.mp3 */,
+				EC16CBDC1FA0D602002E6070 /* thatsIt.mp3 */,
+				EC16CBDF1FA0D603002E6070 /* youCanDoBetter.mp3 */,
+			);
+			path = SoundFiles;
+			sourceTree = "<group>";
+		};
 		EC54C33F1F6B495100C74C54 = {
 			isa = PBXGroup;
 			children = (
@@ -60,11 +84,10 @@
 		EC54C34A1F6B495100C74C54 /* AccelerometerProtoype */ = {
 			isa = PBXGroup;
 			children = (
+				EC16CBB71FA03C66002E6070 /* SoundFiles */,
 				EC54C34B1F6B495100C74C54 /* AppDelegate.swift */,
 				EC54C34D1F6B495100C74C54 /* ViewController.swift */,
 				EC2320621F9D01B200196B43 /* SoundManager.swift */,
-				EC2320641F9D04BA00196B43 /* wrong.mp3 */,
-				EC2320661F9D05BB00196B43 /* good.mp3 */,
 				EC54C34F1F6B495100C74C54 /* Main.storyboard */,
 				EC54C3521F6B495100C74C54 /* Assets.xcassets */,
 				EC54C3541F6B495100C74C54 /* LaunchScreen.storyboard */,
@@ -133,11 +156,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EC2320651F9D04BA00196B43 /* wrong.mp3 in Resources */,
-				EC2320671F9D05BB00196B43 /* good.mp3 in Resources */,
 				EC54C3561F6B495100C74C54 /* LaunchScreen.storyboard in Resources */,
+				EC16CBE41FA0D603002E6070 /* finished.mp3 in Resources */,
 				EC54C3531F6B495100C74C54 /* Assets.xcassets in Resources */,
+				EC16CBE61FA0D603002E6070 /* youCanDoBetter.mp3 in Resources */,
+				EC16CBE21FA0D603002E6070 /* goodJob.mp3 in Resources */,
 				EC54C3511F6B495100C74C54 /* Main.storyboard in Resources */,
+				EC16CBE31FA0D603002E6070 /* thatsIt.mp3 in Resources */,
+				EC16CBE51FA0D603002E6070 /* ok.mp3 in Resources */,
+				EC16CBE71FA0D603002E6070 /* shakeFaster.mp3 in Resources */,
+				EC16CBE11FA0D603002E6070 /* shakeHarder.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
