@@ -15,11 +15,15 @@ struct Constants {
     //sound Names
     static let finishedFileName = "finished"
     static let goodJobFileName = "goodJob"
+    static let thatsGoodFileName = "thatsGood"
+    static let greatFileName = "great"
     static let okFileName = "ok"
     static let shakeFasterFileName = "shakeFaster"
     static let shakeHarderFileName = "shakeHarder"
     static let thatsItFileName = "thatsIt"
     static let youCanDoBetterFileName = "youCanDoBetter"
+    static let startingFileName = "starting"
+    static let stoppedFileName = "stopped"
 }
 
 extension String {
@@ -71,11 +75,15 @@ class ViewController: UIViewController {
     //Sounds instantiations
     var finishedAudio: AVAudioPlayer!
     var goodJobAudio: AVAudioPlayer!
+    var greatAudio: AVAudioPlayer!
+    var thatsGoodAudio: AVAudioPlayer!
     var okAudio: AVAudioPlayer!
     var shakeFasterAudio: AVAudioPlayer!
     var shakeHarderAudio: AVAudioPlayer!
     var thatsItAudio: AVAudioPlayer!
     var youCanDoBetterAudio: AVAudioPlayer!
+    var startingAudio: AVAudioPlayer!
+    var stoppedAudio: AVAudioPlayer!
     
     // Range of Amplitude T
     // G force over Y that will tell us how hard the movement is done
@@ -91,6 +99,8 @@ class ViewController: UIViewController {
     var fMin: Double = 0.0
     
     var completionScore = 60
+    
+    var randomSound:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,11 +120,16 @@ class ViewController: UIViewController {
     func initAudios(){
         finishedAudio = SoundManager.setupSound(soundName: Constants.finishedFileName)
         goodJobAudio = SoundManager.setupSound(soundName: Constants.goodJobFileName)
+        thatsGoodAudio = SoundManager.setupSound(soundName: Constants.thatsItFileName)
+        greatAudio = SoundManager.setupSound(soundName: Constants.greatFileName)
+        goodJobAudio = SoundManager.setupSound(soundName: Constants.goodJobFileName)
         okAudio = SoundManager.setupSound(soundName: Constants.okFileName)
         shakeFasterAudio = SoundManager.setupSound(soundName: Constants.shakeFasterFileName)
         shakeHarderAudio = SoundManager.setupSound(soundName: Constants.shakeHarderFileName)
         thatsItAudio = SoundManager.setupSound(soundName: Constants.thatsItFileName)
         youCanDoBetterAudio = SoundManager.setupSound(soundName: Constants.youCanDoBetterFileName)
+        startingAudio = SoundManager.setupSound(soundName: Constants.startingFileName)
+        stoppedAudio = SoundManager.setupSound(soundName: Constants.stoppedFileName)
     }
     
     func doCalculations(value: Double){
@@ -162,7 +177,21 @@ class ViewController: UIViewController {
             wrongMovesCounter = 0
             globalScore += 1
             print("Global score updated -> \(globalScore)")
-            goodJobAudio.play()
+            // Play random "good sound"
+            randomSound = Int(arc4random_uniform(4) + 1);
+            switch randomSound {
+            case 1:
+                goodJobAudio.play()
+            case 2:
+                greatAudio.play()
+            case 3:
+                thatsGoodAudio.play()
+            case 4:
+                thatsItAudio.play()
+            default:
+                goodJobAudio.play()
+            }
+                
         }else{
             wrongMovesCounter += 1
             //print("Values are not good")
@@ -186,7 +215,7 @@ class ViewController: UIViewController {
             print("Total time needed: \(totalTime)")
             self.motionManager.stopAccelerometerUpdates()
             // Alert showinf results:
-            let alert = UIAlertController(title: "Finished!", message: "It took \(totalTime - 3) seconds to achive the needed good shaking time(\(completionScore)s)", preferredStyle: UIAlertControllerStyle.alert)
+            let alert = UIAlertController(title: "Finished!", message: "It took \(totalTime) seconds to achive the needed good shaking time(\(completionScore)s)", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
@@ -232,6 +261,7 @@ class ViewController: UIViewController {
     
     @IBAction func startPressed(_ sender: Any) {
         // Hold 3 seconds to begin analyzing data
+        startingAudio.play()
         initialTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.updateTimer), userInfo: nil, repeats: true)
     }
     @IBAction func stopPressed(_ sender: Any) {
@@ -251,8 +281,9 @@ class ViewController: UIViewController {
         periodPoints = []
         totalTime = 0
         wrongMovesCounter = 0
-
+        randomSound = 0
         
+        stoppedAudio.play()
         print("Stopped...")
         
     }
