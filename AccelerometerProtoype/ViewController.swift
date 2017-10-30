@@ -131,6 +131,31 @@ class ViewController: UIViewController {
         startingAudio = SoundManager.setupSound(soundName: Constants.startingFileName)
         stoppedAudio = SoundManager.setupSound(soundName: Constants.stoppedFileName)
     }
+    func stopAll(soundOff: Bool){
+        if self.motionManager.isAccelerometerActive{
+            self.motionManager.stopAccelerometerUpdates()
+        }
+        globalTimer.invalidate()
+        initialTimer.invalidate()
+        
+        globalFrequency = 0
+        globalMagnitude = (0.0, 0.0)
+        frequencyCounter = 0
+        isPositive = true
+        crossingZero = 0
+        secondsToBegin = 0
+        globalScore = 0
+        periodPoints = []
+        totalTime = 0
+        wrongMovesCounter = 0
+        randomSound = 0
+        if (!soundOff){
+            stoppedAudio.play()
+            print("Stopped...")
+        }
+        
+        
+    }
     
     func doCalculations(value: Double){
         self.frequencyCounter += 1
@@ -261,31 +286,12 @@ class ViewController: UIViewController {
     
     @IBAction func startPressed(_ sender: Any) {
         // Hold 3 seconds to begin analyzing data
+        stopAll(soundOff: true)
         startingAudio.play()
         initialTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.updateTimer), userInfo: nil, repeats: true)
     }
     @IBAction func stopPressed(_ sender: Any) {
-        if self.motionManager.isAccelerometerActive{
-            self.motionManager.stopAccelerometerUpdates()
-        }
-        globalTimer.invalidate()
-        initialTimer.invalidate()
-
-        globalFrequency = 0
-        globalMagnitude = (0.0, 0.0)
-        frequencyCounter = 0
-        isPositive = true
-        crossingZero = 0
-        secondsToBegin = 0
-        globalScore = 0
-        periodPoints = []
-        totalTime = 0
-        wrongMovesCounter = 0
-        randomSound = 0
-        
-        stoppedAudio.play()
-        print("Stopped...")
-        
+        stopAll(soundOff: false)
     }
 
 }
