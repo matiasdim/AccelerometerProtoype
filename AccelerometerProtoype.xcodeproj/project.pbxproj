@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06C9CBFBFAE8B08C5BC1B8E5 /* Pods_AccelerometerProtoype.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 874AAE2B0B5094733CAA81FD /* Pods_AccelerometerProtoype.framework */; };
 		EC16CBE11FA0D603002E6070 /* shakeHarder.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDA1FA0D602002E6070 /* shakeHarder.mp3 */; };
 		EC16CBE21FA0D603002E6070 /* goodJob.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDB1FA0D602002E6070 /* goodJob.mp3 */; };
 		EC16CBE31FA0D603002E6070 /* thatsIt.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = EC16CBDC1FA0D602002E6070 /* thatsIt.mp3 */; };
@@ -27,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01082735DA460F0D6CFC814B /* Pods-AccelerometerProtoype.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccelerometerProtoype.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccelerometerProtoype/Pods-AccelerometerProtoype.debug.xcconfig"; sourceTree = "<group>"; };
+		4167F36F44FF669126F60EA3 /* Pods-AccelerometerProtoype.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccelerometerProtoype.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccelerometerProtoype/Pods-AccelerometerProtoype.release.xcconfig"; sourceTree = "<group>"; };
+		874AAE2B0B5094733CAA81FD /* Pods_AccelerometerProtoype.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AccelerometerProtoype.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC16CBDA1FA0D602002E6070 /* shakeHarder.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = shakeHarder.mp3; path = AccelerometerProtoype/shakeHarder.mp3; sourceTree = SOURCE_ROOT; };
 		EC16CBDB1FA0D602002E6070 /* goodJob.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = goodJob.mp3; path = AccelerometerProtoype/goodJob.mp3; sourceTree = SOURCE_ROOT; };
 		EC16CBDC1FA0D602002E6070 /* thatsIt.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = thatsIt.mp3; path = AccelerometerProtoype/thatsIt.mp3; sourceTree = SOURCE_ROOT; };
@@ -53,12 +57,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06C9CBFBFAE8B08C5BC1B8E5 /* Pods_AccelerometerProtoype.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		219B440ACCECCDF05DCDC801 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				874AAE2B0B5094733CAA81FD /* Pods_AccelerometerProtoype.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B5C8714B08234D54B49A05EB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				01082735DA460F0D6CFC814B /* Pods-AccelerometerProtoype.debug.xcconfig */,
+				4167F36F44FF669126F60EA3 /* Pods-AccelerometerProtoype.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		EC16CBB71FA03C66002E6070 /* SoundFiles */ = {
 			isa = PBXGroup;
 			children = (
@@ -82,6 +104,8 @@
 			children = (
 				EC54C34A1F6B495100C74C54 /* AccelerometerProtoype */,
 				EC54C3491F6B495100C74C54 /* Products */,
+				B5C8714B08234D54B49A05EB /* Pods */,
+				219B440ACCECCDF05DCDC801 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,9 +139,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EC54C35A1F6B495100C74C54 /* Build configuration list for PBXNativeTarget "AccelerometerProtoype" */;
 			buildPhases = (
+				2AB49682CE9DE15058B06FBB /* [CP] Check Pods Manifest.lock */,
 				EC54C3441F6B495100C74C54 /* Sources */,
 				EC54C3451F6B495100C74C54 /* Frameworks */,
 				EC54C3461F6B495100C74C54 /* Resources */,
+				43DD22D0EE34C827D82D2B2E /* [CP] Embed Pods Frameworks */,
+				6C74F40FDB6CD02DBBE89964 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -186,6 +213,60 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2AB49682CE9DE15058B06FBB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AccelerometerProtoype-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		43DD22D0EE34C827D82D2B2E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-AccelerometerProtoype/Pods-AccelerometerProtoype-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AccelerometerProtoype/Pods-AccelerometerProtoype-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6C74F40FDB6CD02DBBE89964 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AccelerometerProtoype/Pods-AccelerometerProtoype-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EC54C3441F6B495100C74C54 /* Sources */ = {
@@ -327,6 +408,7 @@
 		};
 		EC54C35B1F6B495100C74C54 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 01082735DA460F0D6CFC814B /* Pods-AccelerometerProtoype.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PT98H6A5CY;
@@ -340,6 +422,7 @@
 		};
 		EC54C35C1F6B495100C74C54 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4167F36F44FF669126F60EA3 /* Pods-AccelerometerProtoype.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = PT98H6A5CY;
