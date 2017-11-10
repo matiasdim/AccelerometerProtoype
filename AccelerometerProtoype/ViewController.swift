@@ -33,6 +33,10 @@ extension String {
 }
 
 class ViewController: UIViewController {
+    @IBOutlet weak var amplitudeSlider: UISlider!
+    @IBOutlet weak var amplitudeLabel: UILabel!
+    @IBOutlet weak var freqSlider: UISlider!
+    @IBOutlet weak var freqLabel: UILabel!
     
     @IBOutlet weak var positiveTMinText: UITextField!
     @IBOutlet weak var positiveTMaxText: UITextField!
@@ -109,9 +113,14 @@ class ViewController: UIViewController {
         //Audios inits
         initAudios()
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
+
+    @IBAction func ampSliderChanged(_ sender: Any) {
+        self.amplitudeLabel.text = "\(self.amplitudeSlider.value)"
     }
+    @IBAction func freqSliderChanged(_ sender: Any) {
+        self.freqLabel.text = "\(self.freqSlider.value)"
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
