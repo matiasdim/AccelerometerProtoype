@@ -131,7 +131,7 @@ class ViewController: UIViewController {
         
         let transform : CGAffineTransform = CGAffineTransform(scaleX: 1.0, y: 6.0)
         progressBar.transform = transform
-        progressBar.progress = 0.0
+        resetProgressBar()
     }
 
     @IBAction func ampSliderChanged(_ sender: Any) {
@@ -144,6 +144,11 @@ class ViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func resetProgressBar(){
+        progressBar.progress = 0.0
+        completionPercentageLabel.text = "0%"
     }
 
     func initAudios(){
@@ -183,8 +188,7 @@ class ViewController: UIViewController {
             //print("Stopped...")
         }
         
-        progressBar.progress = 0.0
-        completionPercentageLabel.text = "0%"
+        resetProgressBar()
         
         
     }
@@ -267,6 +271,7 @@ class ViewController: UIViewController {
         }
         if(globalScore == completionScore)
         {
+            resetProgressBar()
             //print("Finished!!")
             finishedAudio.play()
             globalTimer.invalidate()
@@ -277,6 +282,7 @@ class ViewController: UIViewController {
             let alert = UIAlertController(title: "Finished!", message: "It took \(totalTime) seconds to achive the needed good shaking time(\(completionScore)s)", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            
         }
     }
     
