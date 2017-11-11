@@ -183,6 +183,9 @@ class ViewController: UIViewController {
             //print("Stopped...")
         }
         
+        progressBar.progress = 0.0
+        completionPercentageLabel.text = "0%"
+        
         
     }
     
