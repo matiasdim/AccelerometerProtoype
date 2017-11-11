@@ -9,6 +9,7 @@
 import UIKit
 import CoreMotion
 import AVFoundation
+import GradientProgressBar
 
 struct Constants {
     static let accInterval = 1/100 // 100 Hz
@@ -58,6 +59,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var fMaxText: UITextField!
     @IBOutlet weak var fMinText: UITextField!
     @IBOutlet weak var completionScoreText: UITextField!
+    @IBOutlet weak var progressBar: GradientProgressBar!
+    @IBOutlet weak var completionPercentageLabel: UILabel!
     
     var motionManager: CMMotionManager!
     
@@ -125,6 +128,10 @@ class ViewController: UIViewController {
         
         //Audios inits
         initAudios()
+        
+        let transform : CGAffineTransform = CGAffineTransform(scaleX: 1.0, y: 6.0)
+        progressBar.transform = transform
+        progressBar.progress = 0.0
     }
 
     @IBAction func ampSliderChanged(_ sender: Any) {
@@ -173,7 +180,7 @@ class ViewController: UIViewController {
         randomSound = 0
         if (!soundOff){
             stoppedAudio.play()
-            print("Stopped...")
+            //print("Stopped...")
         }
         
         
@@ -210,7 +217,7 @@ class ViewController: UIViewController {
             globalFrequency = 0
             self.frequencyCounter = 0
             self.crossingZero = 0
-            print("Not completing a period in the last 300 reads!!!!!!")
+            //print("Not completing a period in the last 300 reads!!!!!!")
         }
     }
     
@@ -223,7 +230,9 @@ class ViewController: UIViewController {
         {
             wrongMovesCounter = 0
             globalScore += 1
-            print("Global score updated -> \(globalScore)")
+            progressBar.progress = Float(globalScore * 100 / completionScore) * 0.01
+            completionPercentageLabel.text = String(format: "%.0f%@", progressBar.progress * 100, "%")
+            //print("Global score updated -> \(globalScore)")
             // Play random "good sound"
             randomSound = Int(arc4random_uniform(4) + 1);
             switch randomSound {
@@ -255,11 +264,11 @@ class ViewController: UIViewController {
         }
         if(globalScore == completionScore)
         {
-            print("Finished!!")
+            //print("Finished!!")
             finishedAudio.play()
             globalTimer.invalidate()
             
-            print("Total time needed: \(totalTime)")
+            //print("Total time needed: \(totalTime)")
             self.motionManager.stopAccelerometerUpdates()
             // Alert showinf results:
             let alert = UIAlertController(title: "Finished!", message: "It took \(totalTime) seconds to achive the needed good shaking time(\(completionScore)s)", preferredStyle: UIAlertControllerStyle.alert)
@@ -292,10 +301,10 @@ class ViewController: UIViewController {
         self.motionManager.accelerometerUpdateInterval = TimeInterval(Constants.accInterval)
         if self.motionManager.isAccelerometerAvailable {
             globalTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.thickHandler), userInfo: nil, repeats: true)
-            print("Starting getting data...")
+            //print("Starting getting data...")
             self.motionManager.startAccelerometerUpdates(to: .main, withHandler: { [weak self] (accelerometerData, error) in
                 guard let data = accelerometerData else{
-                    print("No data available")
+                    //print("No data available")
                     return
                 }
                 let y = data.acceleration.y

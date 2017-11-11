@@ -7,4 +7,5 @@ target 'AccelerometerProtoype' do
 
   # Pods for AccelerometerProtoype
   pod 'IQKeyboardManagerSwift'
+  pod 'GradientProgressBar', '~> 1.0'
 end
