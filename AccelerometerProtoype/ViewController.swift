@@ -33,8 +33,21 @@ extension String {
 }
 
 class ViewController: UIViewController {
+    
+    // Amplitude slider range is between 3 and 8.
+    // Amplitude has a range in both the positive and negative values. The max positive value and min negative values are set as 9 and -9. Values greater than 9 and lesser than -9 are almost imposible to get for a human moving the phone. So these two values are constant.
+    //This slider will vary the min positive value and the max negative value as:
+    // if slider value is A:
+    //      MinPositive = A and MaxNegative = -A
+    // As this value decreases, less vigourosity is needed.
     @IBOutlet weak var amplitudeSlider: UISlider!
     @IBOutlet weak var amplitudeLabel: UILabel!
+    // Frequency slider range is between 0.022 and 0.06
+    // Frequency range is defined by ZERO-CROSSINGS per second.
+    // So the range goes between:
+    //      0.02 = 1/50 => 50 ZERO-CROSSINGS persecond. This range is minimum because is almost impossible for the intention of the application that someone agitates the phone at a frequency greater that 50 ZERO-CROSSING per second
+    //      0.06 = 1/15 => 15 ZERO-CROSSINGS persecond. This range is the one that can be configured with this freqSlider
+    // As this value decreases, more shaking speed is needed
     @IBOutlet weak var freqSlider: UISlider!
     @IBOutlet weak var freqLabel: UILabel!
     
@@ -115,10 +128,10 @@ class ViewController: UIViewController {
     }
 
     @IBAction func ampSliderChanged(_ sender: Any) {
-        self.amplitudeLabel.text = "\(self.amplitudeSlider.value)"
+        self.amplitudeLabel.text = String(format: "%.2f", self.amplitudeSlider.value)
     }
     @IBAction func freqSliderChanged(_ sender: Any) {
-        self.freqLabel.text = "\(self.freqSlider.value)"
+        self.freqLabel.text = String(format: "%.2f", self.freqSlider.value)
     }
     
     
@@ -256,6 +269,16 @@ class ViewController: UIViewController {
     }
     
     func startGettingData(){
+        // Look up on this file, to the sliders definition to explanation of these slider values
+        positiveTMin = String(format: "%.2f", self.amplitudeSlider.value).doubleValue
+        positiveTMax = String(format: "%.2f", self.amplitudeSlider.maximumValue).doubleValue
+        negativeTMax = String(format: "%.2f", -self.amplitudeSlider.value).doubleValue
+        negativeTMin = String(format: "%.2f", -self.amplitudeSlider.maximumValue).doubleValue
+        fMax = String(format: "%.2f", self.freqSlider.value).doubleValue
+        fMin = String(format: "%.2f", self.freqSlider.minimumValue).doubleValue
+        completionScore = Int(self.completionScoreText.text!.doubleValue)
+        
+        /*
         positiveTMin = self.positiveTMinText.text!.doubleValue
         positiveTMax = self.positiveTMaxText.text!.doubleValue
         negativeTMin = self.negativeTMinText.text!.doubleValue
@@ -263,6 +286,8 @@ class ViewController: UIViewController {
         fMax = self.fMaxText.text!.doubleValue
         fMin = self.fMinText.text!.doubleValue
         completionScore = Int(self.completionScoreText.text!.doubleValue)
+         */
+       
         
         self.motionManager.accelerometerUpdateInterval = TimeInterval(Constants.accInterval)
         if self.motionManager.isAccelerometerAvailable {
