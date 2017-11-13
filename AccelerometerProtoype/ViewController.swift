@@ -52,6 +52,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var freqSlider: UISlider!
     @IBOutlet weak var freqLabel: UILabel!
     
+
+    @IBOutlet weak var completionScoreLabel: UILabel!
+    @IBOutlet weak var completionScoreSlider: UISlider!
+    
+    
     @IBOutlet weak var positiveTMinText: UITextField!
     @IBOutlet weak var positiveTMaxText: UITextField!
     @IBOutlet weak var negativeTMinText: UITextField!
@@ -139,6 +144,9 @@ class ViewController: UIViewController {
     }
     @IBAction func freqSliderChanged(_ sender: Any) {
         self.freqLabel.text = String(format: "%.2f", self.freqSlider.value)
+    }
+    @IBAction func completionScoreSliderChanged(_ sender: Any) {
+        self.completionScoreLabel.text = String(format: "%.0f", self.completionScoreSlider.value)
     }
     
     
@@ -294,7 +302,7 @@ class ViewController: UIViewController {
         negativeTMin = String(format: "%.2f", -self.amplitudeSlider.maximumValue).doubleValue
         fMax = String(format: "%.2f", self.freqSlider.value).doubleValue
         fMin = String(format: "%.2f", self.freqSlider.minimumValue).doubleValue
-        completionScore = Int(self.completionScoreText.text!.doubleValue)
+        completionScore = Int(self.completionScoreSlider.value)
         
         /*
         positiveTMin = self.positiveTMinText.text!.doubleValue
